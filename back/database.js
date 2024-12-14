@@ -5,20 +5,22 @@ Link: https://github.com/M-Gharib/WAD-Lab13-Backend
 We made some modifications/additions to get the posts table.
 */
 
-const Pool = require('pg').Pool;
+require('dotenv').config();
+const { Pool } = require('pg');
 
 const pool = new Pool({
-    user: "postgres",
-    password: "", //add your password
-    database: "WAD",
-    host: "localhost",
-    port: "5432"
+    user: process.env.DB_USER || "postgres",
+    password: process.env.DB_PASSWORD || "",
+    database: process.env.DB_NAME || "secure_app",
+    host: process.env.DB_HOST || "localhost",
+    port: process.env.DB_PORT || 5432
 });
 
 const execute = async(query) => {
     try {
-        await pool.connect(); // create a connection
-        await pool.query(query); // executes a query
+        const client = await pool.connect();
+        await client.query(query);
+        client.release();
         return true;
     } catch (error) {
         console.error(error.stack);
@@ -26,14 +28,9 @@ const execute = async(query) => {
     }
 };
 
-/* 
-gen_random_uuid() A system function to generate a random Universally Unique IDentifier (UUID)
-An example of generated uuid:  32165102-4866-4d2d-b90c-7a2fddbb6bc8
-*/
-
-const createTblQuery = `
+const createUsersTblQuery = `
     CREATE TABLE IF NOT EXISTS "users" (
-        id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         email VARCHAR(200) NOT NULL UNIQUE,
         password VARCHAR(200) NOT NULL 
     );`;
@@ -47,17 +44,16 @@ const createPostsTblQuery = `
         date_updated TIMESTAMP
     );`;
 
-execute(createTblQuery)
-    .then(result => {
-        if (result) {
-            console.log('Table "users" is created');
-            return execute(createPOstsTblQuery);
+const setupDatabase = async () => {
+    const usersTableCreated = await execute(createUsersTblQuery);
+    if (usersTableCreated) {
+        console.log('Table "users" has been created or already exists.');
+        const postsTableCreated = await execute(createPostsTblQuery);
+        if (postsTableCreated) {
+            console.log('Table "posts" has been created or already exists.');
         }
-    })
-    .then(result => {
-        if (result) {
-            console.log('Table "posts is created');
-        }
-    });
+    }
+};
 
+setupDatabase();
 module.exports = pool;

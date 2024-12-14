@@ -6,6 +6,12 @@
     </footer>
 </template>
 
+<script>
+export default {
+    name: 'AppFooter'
+};
+</script>
+
 <style>
 footer {
   background-color: #333;

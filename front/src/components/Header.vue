@@ -5,6 +5,12 @@
     </nav>
 </template>
 
+<script>
+export default {
+    name: 'AppHeader'
+};
+</script>
+
 <style>
 nav {
   background-color: #333;
