@@ -4,6 +4,7 @@ import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
 import SignupView from "@/views/SignupView.vue";
 import ContactView from '@/views/ContactView.vue';
+import AddPostView from '@/views/AddPostView.vue';
 
 const routes = [
     {
@@ -21,7 +22,8 @@ const routes = [
         path: '/contact',
         name: 'ContactView',
         component: ContactView
-    }
+    },
+    { path: "/addPost", name: "AddPost", component: AddPostView },
 ];
 
 const router = createRouter({

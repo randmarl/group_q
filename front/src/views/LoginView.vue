@@ -1,6 +1,6 @@
 <template>
     <div class="login-page">
-      <AppHeader />
+      
       <div class="login-container">
         <h2 class="welcome-message">Login to Your Account</h2>
         <form @submit.prevent="handleLogin">
@@ -26,19 +26,14 @@
         <button @click="navigateToSignup" class="signup-link">Sign Up</button>
       </p>
       </div>
-      <AppFooter />
     </div>
 </template> 
 
 <script>
 import axios from 'axios';
-import AppHeader from "@/components/Header.vue";
-import AppFooter from "@/components/Footer.vue";
 
 export default {
   components: {
-    AppHeader,
-    AppFooter,
   },
   data() {
     return {

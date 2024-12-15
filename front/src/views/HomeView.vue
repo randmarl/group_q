@@ -3,7 +3,11 @@
         
         <div class="content">
             <PostObject v-for="post in posts" :key="post.id" :post="post" @update-likes="updateLikes"/>
-            <button class="reset-button" v-on:click="resetLikes"> Reset Likes </button>
+            <div class="buttons">
+              <button class="reset-button" v-on:click="resetLikes"> Reset Likes </button>
+              <button class="addPost-button" v-on:click="addPost"> Add Post </button>
+              <button class="delete-button" v-on:click="deleteAll"> Delete All </button>
+            </div>
         </div>
         
     </div>
@@ -19,21 +23,18 @@ export default {
     PostObject,
   },
   computed: {
-    // Use Vuex getter to get the posts
     ...mapState({
       posts: state => state.posts
     }),
   },
   methods: {
-    // Use Vuex actions to handle likes
     ...mapActions({
       incrementLikes: 'incrementLikes',
       resetLikes: 'resetLikes',
     }),
 
-    // This method will be called when a like button is clicked
     updateLikes(postId) {
-      this.incrementLikes(postId); // Call Vuex action to increment likes
+      this.incrementLikes(postId);
     }
   },
 };
@@ -62,26 +63,10 @@ export default {
     flex: 1;
   }
 
-  .reset-button {
-    margin: 20px 0;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #42b983;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    align-self: center;
-  }
-
-  .reset-button:hover {
-    background-color: #36a372;
-  }
-
   .side-panel {
     flex: 1;
     background-color: rgb(209, 209, 209);
-}
+  }
 
 .reset-button {
   margin: 20px 0;
@@ -96,5 +81,40 @@ export default {
 
 .reset-button:hover {
   background-color: #36a372;
+}
+
+.addPost-button {
+  margin: 20px 0;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #42b983;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.addPost-button:hover {
+  background-color: #36a372;
+}
+
+.delete-button {
+  margin: 20px 0;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #42b983;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #36a372;
+}
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 </style>
