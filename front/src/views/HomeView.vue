@@ -2,14 +2,13 @@
     <div id="home">
         
         <div class="content">
-            <PostObject v-for="post in posts" :key="post.id" :post="post" @update-likes="updateLikes"/>
-            <template v-if="isAuthenticated">
+          <PostObject v-for="post in posts" :key="post.id" :post="post" @update-likes="updateLikes" />
+          <template v-if="isAuthenticated">
               <div class="buttons">
               <button class="reset-button" v-on:click="resetLikes"> Reset Likes </button>
               <router-link 
                 to="/addPost"
                 class="addPost-button" 
-                v-on:click="addPost" 
                 :disabled="!isAuthenticated"
                 :class="{ disabled: !isAuthenticated }"
               >
@@ -51,6 +50,10 @@ export default {
 
     updateLikes(postId) {
       this.incrementLikes(postId);
+    },
+
+    goToPost(postId) {
+      this.$router.push(`/post/${postId}`);
     }
   },
 };

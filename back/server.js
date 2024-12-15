@@ -87,14 +87,17 @@ app.get('/auth/logout', (req, res) => {
     res.status(202).clearCookie('jwt').json({ message: "Logged out" });
 });
 
-app.get('/posts',authenticateToken,  async (req, res) => {
+app.get('/posts', authenticateToken, async (req, res) => {
     try {
-        const allPosts = await pool.query("SELECT * FROM posts ORDER BY date_posted ASC");
+        const allPosts = await pool.query(
+            "SELECT id, body, date_posted, date_updated, like_count FROM posts ORDER BY date_posted ASC"
+        );
         res.json(allPosts.rows);
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
+
 
 app.post('/posts', authenticateToken, async (req, res) => {
     const { body } = req.body;

@@ -22,6 +22,7 @@ async function checkAuthentication() {
   }
 
 const app = createApp(App);
+store.dispatch('fetchPosts');
 checkAuthentication().then(() => {
     app.use(store).use(router);
     app.config.globalProperties.$axios = axios;

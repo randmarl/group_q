@@ -17,36 +17,46 @@
   </template>
   
   <script>
-  import { useRouter } from "vue-router";
-  
-  export default {
-    name: "AddPostView",
-    data() {
-      return {
-        postContent: "",
-        validationMessage: "",
-      };
-    },
-    setup() {
-      const router = useRouter();
-      return { router };
-    },
-    methods: {
-      handlePosts() {
-        if (!this.postContent.trim()) {
-          this.validationMessage = "Post content cannot be empty!";
-          return;
-        }
-  
-        console.log("Post submitted:", this.postContent);
-  
+import axios from 'axios';
+import { useRouter } from "vue-router";
+
+export default {
+  name: "AddPostView",
+  data() {
+    return {
+      postContent: "",
+      validationMessage: "",
+    };
+  },
+  setup() {
+    const router = useRouter();
+    return { router };
+  },
+  methods: {
+    async handlePosts() {
+      if (!this.postContent.trim()) {
+        this.validationMessage = "Post content cannot be empty!";
+        return;
+      }
+
+      try {
+        const response = await axios.post("http://localhost:3000/posts", {
+          body: this.postContent,
+        }, { withCredentials: true });
+
+        console.log("Post created:", response.data);
+
         this.postContent = "";
         this.validationMessage = "";
         this.router.push("/");
-      },
+      } catch (error) {
+        console.error("Error creating post:", error.response?.data || error.message);
+        this.validationMessage = "Failed to create the post. Please try again.";
+      }
     },
-  };
-  </script>
+  },
+};
+</script>
   
   <style scoped>
   .addPost-page {
