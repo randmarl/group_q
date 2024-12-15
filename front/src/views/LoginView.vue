@@ -31,7 +31,7 @@
 </template> 
 
 <script>
-import axios from 'axios';
+import { mapActions } from "vuex";
 import AppHeader from "@/components/Header.vue";
 import AppFooter from "@/components/Footer.vue";
 
@@ -48,18 +48,21 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["loginUser"]),
       async handleLogin() {
       this.validationMessage = "";
       try {
-        const response = await axios.post('http://localhost:3000/auth/login', {
+        const success = await this.loginUser({
           email: this.email,
           password: this.password,
         });
-        console.log(response.data);
-        alert('Login successful!');
-        this.$router.push("/");
+        if (success) {
+          this.$router.push("/");
+        } else {
+          this.validationMessage = "Invalid email or password.";
+        }
       } catch (error) {
-        console.error("Login error:", error.response?.data || error.message);
+        console.error("Login error:", error.message);
         if (error.response?.status === 401) {
           this.validationMessage = "Incorrect email or password.";
         } else if (error.response?.status === 404) {

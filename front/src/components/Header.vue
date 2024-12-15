@@ -2,15 +2,31 @@
   <header>
     <nav>
       <router-link to="/" class="nav-button">Home</router-link>
-      <router-link to="/login" class="nav-button">Login</router-link>
       <router-link to="/contact" class="nav-button">Contact</router-link>
-    </nav>
+      <template v-if="isAuthenticated">
+        <button @click="logout" class="nav-button">Logout</button>
+      </template>
+      <template v-else>
+        <router-link to="/login" class="nav-button">Login</router-link>
+      </template></nav>
   </header>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
-    name: 'AppHeader'
+  name: "AppHeader",
+  computed: {
+    ...mapGetters(["isAuthenticated"]),
+  },
+  methods: {
+    ...mapActions(["logoutUser"]),
+    logout() {
+      this.logoutUser();
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 
