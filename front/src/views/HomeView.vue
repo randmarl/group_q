@@ -5,7 +5,7 @@
             <PostObject v-for="post in posts" :key="post.id" :post="post" @update-likes="updateLikes"/>
             <div class="buttons">
               <button class="reset-button" v-on:click="resetLikes"> Reset Likes </button>
-              <button class="addPost-button" v-on:click="addPost"> Add Post </button>
+              <router-link to="/addPost" class="addPost-button"> Add Post </router-link>
               <button class="delete-button" v-on:click="deleteAll"> Delete All </button>
             </div>
         </div>
@@ -84,6 +84,7 @@ export default {
 }
 
 .addPost-button {
+  text-decoration: none;
   margin: 20px 0;
   padding: 10px 20px;
   font-size: 16px;
