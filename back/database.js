@@ -38,10 +38,10 @@ const createUsersTblQuery = `
 const createPostsTblQuery = `
     CREATE TABLE IF NOT EXISTS "posts" (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-        user_id uuid REFERENCES users(id),
         body TEXT NOT NULL,
         date_posted TIMESTAMP NOT NULL DEFAULT NOW(),
-        date_updated TIMESTAMP
+        date_updated TIMESTAMP,
+        like_count INT DEFAULT 0
     );`;
 
 const setupDatabase = async () => {

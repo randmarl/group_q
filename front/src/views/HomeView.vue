@@ -24,7 +24,6 @@
                 Delete All
               </button></div>
             </template>
-            <template v-else></template>
         </div>
     </div>
 </template>
