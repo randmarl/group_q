@@ -1,25 +1,22 @@
 <template>
     <div id="home">
-        <AppHeader />
+        
         <div class="content">
             <PostObject v-for="post in posts" :key="post.id" :post="post" @update-likes="updateLikes"/>
             <button class="reset-button" v-on:click="resetLikes"> Reset Likes </button>
         </div>
-        <AppFooter />
+        
     </div>
 </template>
 
 <script>
-import AppHeader from "@/components/Header.vue";
-import AppFooter from "@/components/Footer.vue";
+
 import PostObject from "../components/Post.vue";
 import Data from '@/assets/posts.json';
 
 export default {
     name: "HomeView",
     components: {
-        AppHeader,
-        AppFooter,
         PostObject,
     },
     data() {
@@ -59,36 +56,47 @@ export default {
 </script>
 
 <style>
-#home {
+  #home {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     width: 100%;
     height: 100%;
-    margin-bottom: 40px;
-}
-.content {
+    padding-bottom: 40px;
+  }
+
+  .content {
     background-color: white;
-	aspect-ratio: 3 / 4;
-	overflow-y: auto;
-}
-.side-panel {
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+    overflow-y: auto;
+    padding: 20px;
+    flex: 1;
+  }
+
+  .reset-button {
+    margin: 20px 0;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #42b983;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: center;
+  }
+
+  .reset-button:hover {
+    background-color: #36a372;
+  }
+
+  .side-panel {
     flex: 1;
     background-color: rgb(209, 209, 209);
-}
-
-.reset-button {
-  margin: 20px 0;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #42b983;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.reset-button:hover {
-  background-color: #36a372;
-}
+    height: auto;
+  }
 </style>
