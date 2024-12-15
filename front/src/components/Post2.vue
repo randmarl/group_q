@@ -3,7 +3,7 @@
     <div class="post-header">
       <p>{{ post.date }}</p>
     </div>
-    <div class="post-content" @dblclick="toggleEditMode">
+    <div class="post-content" @dblclick="isAuthenticated ? toggleEditMode() : null">
       <p v-if="!isEditing">{{ post.content }}</p>
       <input 
         v-if="isEditing" 
@@ -17,7 +17,7 @@
         👍 <span class="like-count">{{ post.likes }}</span>
       </button>
     </div>
-    <div class="buttons" v-if="showButtons">
+    <div class="buttons" v-if="isAuthenticated && showButtons">
       <button @click="handleUpdatePost" class="updatePost">Update</button>
       <button @click="deletePost" class="deletePost">Delete</button>
     </div>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: "PostObject",
@@ -42,6 +42,9 @@ export default {
       newContent: this.post.content,
     };
   },
+  computed: {
+    ...mapGetters(['isAuthenticated'])
+  },
   methods: {
     ...mapActions({
       incrementLikes: 'incrementLikes',
@@ -52,11 +55,13 @@ export default {
       this.$emit('update-likes', this.post.id);
     },
     toggleEditMode() {
-      this.isEditing = !this.isEditing;
+      if(this.isAuthenticated){
+        this.isEditing = !this.isEditing;
       this.showButtons = !this.showButtons;
       if (this.isEditing) {
         this.newContent = this.post.content;
       }
+    }
     },
     async handleUpdatePost() {
       try {
