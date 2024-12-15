@@ -5,9 +5,22 @@
             <PostObject v-for="post in posts" :key="post.id" :post="post" @update-likes="updateLikes"/>
             <div class="buttons">
               <button class="reset-button" v-on:click="resetLikes"> Reset Likes </button>
-              <button class="addPost-button" v-on:click="addPost"> Add Post </button>
-              <button class="delete-button" v-on:click="deleteAll"> Delete All </button>
-            </div>
+              <button 
+                class="addPost-button" 
+                v-on:click="addPost" 
+                :disabled="!isAuthenticated"
+                :class="{ disabled: !isAuthenticated }"
+              >
+                Add Post
+              </button>
+              <button 
+                class="delete-button" 
+                v-on:click="deleteAll" 
+                :disabled="!isAuthenticated"
+                :class="{ disabled: !isAuthenticated }"
+              >
+                Delete All
+              </button></div>
         </div>
         
     </div>
@@ -24,7 +37,8 @@ export default {
   },
   computed: {
     ...mapState({
-      posts: state => state.posts
+      posts: state => state.posts,
+      isAuthenticated: state => state.isAuthenticated,
     }),
   },
   methods: {
