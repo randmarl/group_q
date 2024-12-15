@@ -73,6 +73,9 @@ export default {
         console.error('Error updating post:', error);
       }
     },
+    deletePost() {
+      this.$emit('delete-post');
+    },
   },
 };
 </script>

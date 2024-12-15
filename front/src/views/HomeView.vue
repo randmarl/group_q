@@ -2,7 +2,7 @@
     <div id="home">
         
         <div class="content">
-          <PostObject v-for="post in posts" :key="post.id" :post="post" @update-likes="updateLikes" />
+          <PostObject v-for="post in posts" :key="post.id" :post="post" @update-likes="updateLikes" @delete-post="deletePost(post.id)" />
           <template v-if="isAuthenticated">
               <div class="buttons">
               <button class="reset-button" v-on:click="resetLikes"> Reset Likes </button>
@@ -52,8 +52,19 @@ export default {
       this.incrementLikes(postId);
     },
 
-    goToPost(postId) {
-      this.$router.push(`/post/${postId}`);
+    async deletePost(postId) {
+      try {
+        await this.$store.dispatch('deletePost', postId);
+      } catch (error) {
+        console.error("Error deleting post:", error);
+      }
+    },
+    async deleteAll() {
+      try {
+        await this.$store.dispatch('deleteAllPosts');
+      } catch (error) {
+        console.error("Error deleting all posts:", error);
+      }
     }
   },
 };

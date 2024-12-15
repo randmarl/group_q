@@ -21,6 +21,9 @@ const store = createStore({
     SET_POSTS(state, posts) {
       state.posts = posts;
     },
+    DELETE_POST(state, postId) {
+      state.posts = state.posts.filter(post => post.id !== postId);
+    },
     INCREMENT_LIKES(state, postId) {
       const post = state.posts.find(p => p.id === postId);
       if (post) {
@@ -60,6 +63,22 @@ const store = createStore({
         commit('SET_POSTS', posts);
       } catch (error) {
         console.error('Error fetching posts:', error.response?.data || error.message);
+      }
+    },
+    async deletePost({ commit }, postId) {
+      try {
+        await axios.delete(`http://localhost:3000/posts/${postId}`, { withCredentials: true });
+        commit('DELETE_POST', postId);
+      } catch (error) {
+        console.error('Error deleting post:', error);
+      }
+    },
+    async deleteAllPosts({ commit }) {
+      try {
+        await axios.delete('http://localhost:3000/posts', { withCredentials: true });
+        commit('SET_POSTS', []);
+      } catch (error) {
+        console.error('Error deleting all posts:', error.response?.data || error.message);
       }
     },
     incrementLikes({ commit }, postId) {
