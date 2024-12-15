@@ -10,48 +10,32 @@
 </template>
 
 <script>
-
+import { mapState, mapActions } from 'vuex';
 import PostObject from "../components/Post.vue";
-import Data from '@/assets/posts.json';
 
 export default {
-    name: "HomeView",
-    components: {
-        PostObject,
-    },
-    data() {
-        return {
-            posts: [],
-        };
-    },
-    methods: {
-        async fetchPosts() {
-            try {
-                this.posts = (Data.record || Data).map(post => {
-                    return {
-                        ...post,
-                        likes: post.likes || 0,
-                    };
-                });
-            } catch (error) {
-                console.error("Error fetching posts: ", error);
-            }
-        },
-        resetLikes() {
-            this.posts.forEach((post) => {
-                post.likes = 0;
-            });
-        },
-        updateLikes(postId) {
-            const post = this.posts.find(p => p.id === postId);
-            if (post) {
-                post.likes++;
-            }
-        }
-    },
-    mounted() {
-        this.fetchPosts();
-    },
+  name: "HomeView",
+  components: {
+    PostObject,
+  },
+  computed: {
+    // Use Vuex getter to get the posts
+    ...mapState({
+      posts: state => state.posts
+    }),
+  },
+  methods: {
+    // Use Vuex actions to handle likes
+    ...mapActions({
+      incrementLikes: 'incrementLikes',
+      resetLikes: 'resetLikes',
+    }),
+
+    // This method will be called when a like button is clicked
+    updateLikes(postId) {
+      this.incrementLikes(postId); // Call Vuex action to increment likes
+    }
+  },
 };
 </script>
 
