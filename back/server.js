@@ -46,7 +46,7 @@ app.get('/auth/authenticate', async(req, res) => {
     try {
         jwt.verify(token, secret);
         res.send({ authenticated: true });
-    } catch (err) {
+    } catch (error) {
         res.send({ authenticated: false });
     }
 });
@@ -60,10 +60,10 @@ app.post('/auth/signup', async(req, res) => {
             "INSERT INTO users(email, password) values ($1, $2) RETURNING*", 
             [email, hashedPassword]
         );
-        const token = generateJWT(authUser.rows[0].id);
+        const token = generateJWT(newUser.rows[0].id);
         res.status(201).cookie('jwt', token, { maxAge: maxAge * 1000, httpOnly: true }).json({ user_id: newUser.rows[0].id });
-    } catch (err) {
-        res.status(400).send(err.message);
+    } catch (error) {
+        res.status(400).send(error.message);
     }
 });
 
@@ -79,7 +79,7 @@ app.post('/auth/login', async(req, res) => {
         const token = await generateJWT(user.rows[0].id);
         res.status(200).cookie('jwt', token, { maxAge: maxAge * 1000, httpOnly: true }).json({ user_id: user.rows[0].id });
     } catch (error) {
-        res.status(500).send(err.message);
+        res.status(500).send(error.message);
     }
 });
 
@@ -91,8 +91,8 @@ app.get('/posts',authenticateToken,  async (req, res) => {
     try {
         const allPosts = await pool.query("SELECT * FROM posts ORDER BY date_posted ASC");
         res.json(allPosts.rows);
-    } catch (err) {
-        res.status(500).send(err.message);
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 });
 
@@ -104,8 +104,8 @@ app.post('/posts', authenticateToken, async (req, res) => {
             [req.user.id, body]
         );
         res.status(201).json(newPost.rows[0]);
-    } catch (err) {
-        res.status(500).send(err.message);
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 });
 
@@ -115,8 +115,8 @@ app.get('/posts/:id', authenticateToken, async (req, res) => {
         const post = await pool.query("SELECT * FROM posts WHERE id = $1", [id]);
         if (post.rows.length === 0) return res.status(404).send("Post not found");
         res.json(post.rows[0]);
-    } catch (err) {
-        res.status(500).send(err.message);
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 });
 
@@ -126,8 +126,8 @@ app.put('/posts/:id', authenticateToken, async (req, res) => {
     try {
         await pool.query("UPDATE posts SET body = $1, date_updated = NOW() WHERE id = $2", [body, id]);
         res.send("Post updated");
-    } catch (err) {
-        res.status(500).send(err.message);
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 });
 
@@ -136,8 +136,8 @@ app.delete('/posts/:id', authenticateToken, async (req, res) => {
     try {
         await pool.query("DELETE FROM posts WHERE id = $1", [id]);
         res.send("Post deleted");
-    } catch (err) {
-        res.status(500).send(err.message);
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 });
 
@@ -145,8 +145,8 @@ app.delete('/posts',authenticateToken,  async (req, res) => {
     try {
         await pool.query("DELETE FROM posts");
         res.send("All posts deleted");
-    } catch (err) {
-        res.status(500).send(err.message);
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 });
 

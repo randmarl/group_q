@@ -2,8 +2,8 @@
     <div class="login-page">
       <AppHeader />
       <div class="login-container">
-        <h2 class="welcome-message">Create Your Account</h2>
-        <form @submit.prevent="validateSignupForm">
+        <h2 class="welcome-message">Login to Your Account</h2>
+        <form @submit.prevent="handleLogin">
           <input
             id="email"
             v-model="email"
@@ -18,15 +18,20 @@
             required
             type="password"
           />
-          <p id="validation-message" class="error-message">{{ validationMessage }}</p>
-          <button class="signup-btn" type="submit">Sign Up</button>
+          <p class="error-message" v-if="validationMessage">{{ validationMessage }}</p>
+          <button class="action-btn" type="submit">Log In</button>
         </form>
+        <p class="toggle-message">
+          Don't have an account?
+        <button @click="navigateToSignup" class="signup-link">Sign Up</button>
+      </p>
       </div>
       <AppFooter />
     </div>
 </template> 
 
 <script>
+import axios from 'axios';
 import AppHeader from "@/components/Header.vue";
 import AppFooter from "@/components/Footer.vue";
 
@@ -43,36 +48,59 @@ export default {
     };
   },
   methods: {
-    validateSignupForm() {
+      async handleLogin() {
       this.validationMessage = "";
-      const errors = [];
+      try {
+        const response = await axios.post('http://localhost:3000/auth/login', {
+          email: this.email,
+          password: this.password,
+        });
+        console.log(response.data);
+        alert('Login successful!');
+        this.$router.push("/");
+      } catch (error) {
+        console.error("Login error:", error.response?.data || error.message);
+        if (error.response?.status === 401) {
+          this.validationMessage = "Incorrect email or password.";
+        } else if (error.response?.status === 404) {
+          this.validationMessage = "User does not exist.";
+        } else {
+          this.validationMessage = error.response?.data || "An error occurred.";
+        }
+      }
+    },
+    navigateToSignup() {
+      this.$router.push("/signup");
+    },
+      validateSignupForm() {
+        this.validationMessage = "";
+        const errors = [];
+        if (this.password.length < 8 || this.password.length >= 15) {
+          errors.push("Password must be at least 8 characters and less than 15 characters long.");
+        }
+        if (!/^[A-Z]/.test(this.password)) {
+          errors.push("Password must start with an uppercase alphabet character.");
+        }
+        if (!/[A-Z]/.test(this.password)) {
+          errors.push("Password must include at least one uppercase alphabet character.");
+        }
+        if ((this.password.match(/[a-z]/g) || []).length < 2) {
+          errors.push("Password must include at least two lowercase alphabet characters.");
+        }
+        if (!/\d/.test(this.password)) {
+          errors.push("Password must include at least one numeric value.");
+        }
+        if (!/_/.test(this.password)) {
+          errors.push("Password must include the character '_'.");
+        }
 
-      if (this.password.length < 8 || this.password.length >= 15) {
-        errors.push("Password must be at least 8 characters and less than 15 characters long.");
-      }
-      if (!/^[A-Z]/.test(this.password)) {
-        errors.push("Password must start with an uppercase alphabet character.");
-      }
-      if (!/[A-Z]/.test(this.password)) {
-        errors.push("Password must include at least one uppercase alphabet character.");
-      }
-      if ((this.password.match(/[a-z]/g) || []).length < 2) {
-        errors.push("Password must include at least two lowercase alphabet characters.");
-      }
-      if (!/\d/.test(this.password)) {
-        errors.push("Password must include at least one numeric value.");
-      }
-      if (!/_/.test(this.password)) {
-        errors.push("Password must include the character '_'.");
-      }
+        if (errors.length > 0) {
+          this.validationMessage = "The password is not valid - " + errors.join(" ");
+        } else {
+          alert("Account successfully created!");
 
-      if (errors.length > 0) {
-        this.validationMessage = "The password is not valid - " + errors.join(" ");
-      } else {
-        alert("Account successfully created!");
-
-        this.email = "";
-        this.password = "";
+          this.email = "";
+          this.password = "";
       }
     },
   },
@@ -107,24 +135,33 @@ input {
   display: block;
   width: calc(100% - 40px);
   margin: 10px auto;
-  width: 100%;
-  margin-bottom: 10px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-sizing: border-box;
 }
 
-.signup-btn {
+.action-btn {
   background-color: #007bff;
   color: white;
   border: none;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  text-align: center;
 }
 
-.signup-btn:hover {
+.signup-link {
+  background: none;
+  color: #007bff;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.action-btn:hover {
   background-color: #0056b3;
 }
 
@@ -132,5 +169,16 @@ input {
   color: red;
   font-size: 0.9rem;
   margin-bottom: 10px;
+}
+
+.toggle-message {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.toggle-link {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
 }
 </style>
