@@ -98,6 +98,7 @@ export default {
 }
 
 .addPost-button {
+  text-decoration: none;
   margin: 20px 0;
   padding: 10px 20px;
   font-size: 16px;
