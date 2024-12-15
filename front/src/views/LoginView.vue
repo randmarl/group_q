@@ -1,6 +1,6 @@
 <template>
     <div class="login-page">
-      
+      <AppHeader />
       <div class="login-container">
         <h2 class="welcome-message">Create Your Account</h2>
         <form @submit.prevent="validateSignupForm">
@@ -22,11 +22,19 @@
           <button class="signup-btn" type="submit">Sign Up</button>
         </form>
       </div>
+      <AppFooter />
     </div>
 </template> 
 
 <script>
+import AppHeader from "@/components/Header.vue";
+import AppFooter from "@/components/Footer.vue";
+
 export default {
+  components: {
+    AppHeader,
+    AppFooter,
+  },
   data() {
     return {
       email: "",

@@ -1,21 +1,25 @@
 <template>
     <div id="home">
-        <div class="sidepanel"></div>
+        <AppHeader />
         <div class="content">
             <PostObject v-for="post in posts" :key="post.id" :post="post" @update-likes="updateLikes"/>
             <button class="reset-button" v-on:click="resetLikes"> Reset Likes </button>
         </div>
-        <div class="sidepanel"></div>
+        <AppFooter />
     </div>
 </template>
 
 <script>
+import AppHeader from "@/components/Header.vue";
+import AppFooter from "@/components/Footer.vue";
 import PostObject from "../components/Post.vue";
 import Data from '@/assets/posts.json';
 
 export default {
     name: "HomeView",
     components: {
+        AppHeader,
+        AppFooter,
         PostObject,
     },
     data() {

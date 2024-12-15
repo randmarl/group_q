@@ -1,8 +1,10 @@
 <template>
+  <header>
     <nav>
       <router-link to="/" class="nav-button">Home</router-link>
       <router-link to="/login" class="nav-button">Login</router-link>
     </nav>
+  </header>
 </template>
 
 <script>
@@ -12,6 +14,19 @@ export default {
 </script>
 
 <style>
+header {
+  background-color: #333;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  height: 60px;
+}
+
 nav {
   background-color: #333;
 	flex-direction: row;
