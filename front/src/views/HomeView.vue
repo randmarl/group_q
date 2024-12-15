@@ -3,16 +3,18 @@
         
         <div class="content">
             <PostObject v-for="post in posts" :key="post.id" :post="post" @update-likes="updateLikes"/>
-            <div class="buttons">
+            <template v-if="isAuthenticated">
+              <div class="buttons">
               <button class="reset-button" v-on:click="resetLikes"> Reset Likes </button>
-              <button 
+              <router-link 
+                to="/addPost"
                 class="addPost-button" 
                 v-on:click="addPost" 
                 :disabled="!isAuthenticated"
                 :class="{ disabled: !isAuthenticated }"
               >
                 Add Post
-              </button>
+            </router-link>
               <button 
                 class="delete-button" 
                 v-on:click="deleteAll" 
@@ -21,14 +23,15 @@
               >
                 Delete All
               </button></div>
+            </template>
+            <template v-else></template>
         </div>
-        
     </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import PostObject from "../components/Post.vue";
+import { mapState, mapGetters, mapActions } from 'vuex';
+import PostObject from "../components/Post2.vue";
 
 export default {
   name: "HomeView",
@@ -36,9 +39,9 @@ export default {
     PostObject,
   },
   computed: {
+    ...mapGetters(["isAuthenticated"]),
     ...mapState({
       posts: state => state.posts,
-      isAuthenticated: state => state.isAuthenticated,
     }),
   },
   methods: {
@@ -67,7 +70,8 @@ export default {
 
   .content {
     background-color: white;
-    max-width: 800px;
+    width: 100%;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

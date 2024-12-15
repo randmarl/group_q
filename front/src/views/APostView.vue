@@ -6,12 +6,13 @@
           <input
             id="post"
             v-model="postContent"
-            placeholder="Write your post..."
             required
           />
           <p class="error-message" v-if="validationMessage">{{ validationMessage }}</p>
-          <button class="action-btn" type="submit">Update</button>
-          <button class="action-btn" type="submit">Delete</button>
+          <div class="buttons">
+            <button @click="updatePost" class="updatePost" type="submit">Update</button>
+            <button @click="deletePost" class="deletePost" type="submit">Delete</button>
+          </div>
         </form>
       </div>
     </div>
@@ -56,28 +57,40 @@
     border-radius: 5px;
     box-sizing: border-box;
   }
+    .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    }
   
-  .action-btn {
+  .deletePost {
     background-color: #007bff;
     color: white;
     border: none;
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
-    width: 100%;
+    width: 45%;
+    margin-top: 10px;
+    text-align: center;
+  }
+  .deletePost:hover {
+    background-color: #0056b3;
+  }
+  .updatePost {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 45%;
     margin-top: 10px;
     text-align: center;
   }
   
-  .signup-link {
-    background: none;
-    color: #007bff;
-    border: none;
-    text-decoration: underline;
-    cursor: pointer;
-  }
   
-  .action-btn:hover {
+  .updatePost:hover {
     background-color: #0056b3;
   }
   
